@@ -70,8 +70,15 @@ theorem markedCyclicTangentType_singular (p : MarkedPointIndex) :
       (markedCyclicTangentType p).firstCharacter
       (markedCyclicTangentType p).secondCharacter = false := by
   cases p with
-  | inl t => decide +revert
-  | inr b => cases b <;> decide
+  | inl t =>
+      change cstSmoothPrimary 2 1 1 = false
+      decide
+  | inr b =>
+      cases b
+      · change cstSmoothPrimary 5 2 2 = false
+        decide
+      · change cstSmoothPrimary 7 2 2 = false
+        decide
 
 /-- The six chart indices have cardinality six. -/
 theorem chart_basket_multiplicity :
