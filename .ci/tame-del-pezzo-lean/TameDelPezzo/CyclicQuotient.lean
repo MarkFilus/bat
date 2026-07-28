@@ -1,5 +1,4 @@
-import Mathlib.Data.Nat.GCD.Basic
-import Mathlib.Tactic.NativeDecide
+import Mathlib
 
 namespace TameDelPezzo.CyclicQuotient
 
