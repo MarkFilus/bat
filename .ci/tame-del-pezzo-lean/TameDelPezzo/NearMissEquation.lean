@@ -108,9 +108,8 @@ theorem nearMissEquation_pderiv_x1
   ring
 
 /--
-On the hypersurface, simultaneous vanishing of the formal partial derivatives
-forces the affine-cone origin. Thus the punctured affine cone has no Jacobian
-critical point.
+On the hypersurface, simultaneous vanishing of three of the formal partial
+derivatives already forces the affine-cone origin.
 -/
 theorem nearMissEquation_jacobian_zero_only_at_origin
     {K : Type*} [Field K] [CharP K 3]
@@ -132,5 +131,22 @@ theorem nearMissEquation_jacobian_zero_only_at_origin
   have hx0 : point Coordinate.x0 = 0 := eq_zero_of_pow_eq_zero hx0pow
   intro coordinate
   cases coordinate <;> assumption
+
+/--
+The punctured affine cone is Jacobian-regular: every nonzero solution has at
+least one nonvanishing formal partial derivative.
+-/
+theorem nearMissEquation_punctured_cone_regular
+    {K : Type*} [Field K] [CharP K 3]
+    (point : Coordinate → K)
+    (hEquation : eval point (nearMissEquation K) = 0)
+    (hNonzero : point ≠ 0) :
+    ¬ ∀ coordinate,
+      eval point (pderiv coordinate (nearMissEquation K)) = 0 := by
+  intro hAll
+  apply hNonzero
+  funext coordinate
+  exact nearMissEquation_jacobian_zero_only_at_origin point hEquation
+    (hAll Coordinate.x0) (hAll Coordinate.y) (hAll Coordinate.z) coordinate
 
 end TameDelPezzo.NearMiss
