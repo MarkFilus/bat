@@ -1,0 +1,10 @@
+import TameDelPezzo
+
+#print axioms TameDelPezzo.card_special_le_four
+#print axioms TameDelPezzo.not_eight_singularities
+#print axioms TameDelPezzo.CyclicQuotient.kernel_agreement_through_16
+#print axioms TameDelPezzo.CyclicQuotient.independent_agreement_through_48
+#print axioms TameDelPezzo.NearMiss.binarySextic_derivative
+#print axioms TameDelPezzo.NearMiss.binarySextic_six_distinct_geometric_roots
+#print axioms TameDelPezzo.NearMiss.visibleSingularPoints_card
+#print axioms TameDelPezzo.NearMiss.eight_point_near_miss_not_rank_one
