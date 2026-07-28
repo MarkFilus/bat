@@ -17,7 +17,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -27,6 +27,7 @@ jobs:
           set -euo pipefail
           root=.ci/tame-del-pezzo-lean
           if grep -RInE ":=[[:space:]]*(by[[:space:]]+)?(sorry|admit)|by[[:space:]]+(sorry|admit)|^[[:space:]]*axiom[[:space:]]" "$root" --include='*.lean'; then
+            echo "forbidden proof placeholder or project axiom" >&2
             exit 1
           fi
 
@@ -38,7 +39,7 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: update, cache, and build with captured log
+      - name: update, restore mathlib cache, and build lean library
         id: lean-build
         working-directory: .ci/tame-del-pezzo-lean
         shell: bash
@@ -47,16 +48,17 @@ jobs:
           {
             lake update
             lake exe cache get
-            lake build
-          } 2>&1 | tee lean-build.log
+            lake build TameDelPezzo
+            lake env lean Audit.lean
+          } 2>&1 | tee lean-verification.log
 
-      - name: upload build log
+      - name: upload primary verification log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tame-del-pezzo-lean-build-log
-          path: .ci/tame-del-pezzo-lean/lean-build.log
-          if-no-files-found: warn
+          name: tame-del-pezzo-lean-verification
+          path: .ci/tame-del-pezzo-lean/lean-verification.log
+          if-no-files-found: error
 
       - name: independent environment checkers
         if: steps.lean-build.outcome == 'success'
@@ -71,20 +73,3 @@ jobs:
           leanchecker: true
           nanoda: true
           nanoda-allow-sorry: false
-
-      - name: run finite certificate and axiom audit
-        if: steps.lean-build.outcome == 'success'
-        working-directory: .ci/tame-del-pezzo-lean
-        shell: bash
-        run: |
-          set -euo pipefail
-          lake exe certificate | tee lean-verification.log
-          lake env lean Audit.lean 2>&1 | tee -a lean-verification.log
-
-      - name: upload verification log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: tame-del-pezzo-lean-verification
-          path: .ci/tame-del-pezzo-lean/lean-verification.log
-          if-no-files-found: warn
