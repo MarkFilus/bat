@@ -82,8 +82,9 @@ theorem reflectionGeneratorGCDFinset_eq_gcd {r a b : Nat} (hr : 0 < r) :
   · apply Finset.dvd_gcd
     intro k hk
     rw [mem_coordinateKernelExponents hr] at hk
-    rcases hk with rfl | ⟨_, hk⟩
-    · exact Nat.dvd_trans (Nat.gcd_dvd_left _ _)
+    rcases hk with hkEq | ⟨_, hk⟩
+    · subst k
+      exact Nat.dvd_trans (Nat.gcd_dvd_left _ _)
         (first_kernel_generator_dvd_order (r := r) (a := a))
     · rcases hk with hka | hkb
       · exact Nat.dvd_trans (Nat.gcd_dvd_left _ _) hka
