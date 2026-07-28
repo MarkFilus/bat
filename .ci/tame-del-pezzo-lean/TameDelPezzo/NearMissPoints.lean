@@ -10,7 +10,9 @@ noncomputable abbrev visibleSingularPoints : Type :=
 /-- The concrete point type has exactly eight elements. -/
 theorem visibleSingularPoints_card :
     Fintype.card visibleSingularPoints = 8 := by
-  simp [visibleSingularPoints, binarySextic_six_distinct_geometric_roots]
+  unfold visibleSingularPoints
+  rw [Fintype.card_sum, binarySextic_six_distinct_geometric_roots]
+  rfl
 
 /-- The near miss simultaneously has eight visible points and Picard rank six. -/
 theorem eight_points_but_rank_six :
