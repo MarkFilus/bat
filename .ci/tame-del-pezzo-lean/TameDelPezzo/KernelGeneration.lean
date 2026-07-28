@@ -120,7 +120,7 @@ theorem foldl_gcd_eq_insert_toFinset_gcd (xs : List Nat) (acc : Nat) :
   | cons x xs ih =>
       simp only [List.foldl, List.toFinset_cons]
       rw [ih]
-      simpa only [Finset.gcd_insert] using
+      simpa only [Finset.gcd_insert, id_eq] using
         (Nat.gcd_assoc acc x (xs.toFinset.gcd id))
 
 /-- The original list/fold implementation equals the semantic finite-set implementation. -/
