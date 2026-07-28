@@ -72,13 +72,14 @@ jobs:
           nanoda: true
           nanoda-allow-sorry: false
 
-      - name: run finite certificate
+      - name: run finite certificate and axiom audit
         if: steps.lean-build.outcome == 'success'
         working-directory: .ci/tame-del-pezzo-lean
         shell: bash
         run: |
           set -euo pipefail
           lake exe certificate | tee lean-verification.log
+          lake env lean Audit.lean 2>&1 | tee -a lean-verification.log
 
       - name: upload verification log
         if: always()
