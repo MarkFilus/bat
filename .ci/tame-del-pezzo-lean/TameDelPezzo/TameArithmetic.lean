@@ -8,6 +8,6 @@ theorem divisor_coprime_three {r w : Nat} (hdiv : r ∣ w)
 
 theorem near_miss_weights_tame :
     Nat.Coprime 2 3 ∧ Nat.Coprime 2 3 ∧ Nat.Coprime 5 3 ∧ Nat.Coprime 7 3 := by
-  native_decide
+  decide
 
 end TameDelPezzo.TameArithmetic
