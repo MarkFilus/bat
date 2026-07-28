@@ -4,6 +4,8 @@ import TameDelPezzo
 #print axioms TameDelPezzo.card_special_le_four
 #print axioms TameDelPezzo.not_five_singularities
 #print axioms TameDelPezzo.not_eight_singularities
+#print axioms TameDelPezzo.CyclicQuotient.character_vanishes_iff_generator_dvd
+#print axioms TameDelPezzo.CyclicQuotient.inCoordinateKernel_eq_true_iff
 #print axioms TameDelPezzo.CyclicQuotient.complementary_divisor_involution
 #print axioms TameDelPezzo.CyclicQuotient.coprime_complements_iff_lcm_eq
 #print axioms TameDelPezzo.CyclicQuotient.primary_coprime_iff_stabilizer_lcm
