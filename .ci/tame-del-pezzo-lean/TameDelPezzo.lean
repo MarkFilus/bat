@@ -3,3 +3,4 @@ import TameDelPezzo.CyclicQuotient
 import TameDelPezzo.NearMiss
 import TameDelPezzo.TameArithmetic
 import TameDelPezzo.BinarySextic
+import TameDelPezzo.NearMissPoints
