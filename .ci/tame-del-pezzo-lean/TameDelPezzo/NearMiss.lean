@@ -17,9 +17,9 @@ theorem resolution_picard_rank : 10 - (-4 : ℤ) = 14 := by norm_num
 
 theorem coarse_picard_rank : 14 - 8 = 6 := by norm_num
 
-theorem six_vanishes_mod_three : (6 : ZMod 3) = 0 := by native_decide
+theorem six_vanishes_mod_three : (6 : ZMod 3) = 0 := by decide
 
-theorem one_survives_mod_three : (1 : ZMod 3) ≠ 0 := by native_decide
+theorem one_survives_mod_three : (1 : ZMod 3) ≠ 0 := by decide
 
 theorem rank_is_not_one : (6 : Nat) ≠ 1 := by norm_num
 
