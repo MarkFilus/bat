@@ -1,5 +1,4 @@
-import Mathlib.Data.Fintype.Card
-import Mathlib.Tactic.Omega
+import Mathlib
 
 namespace TameDelPezzo
 
@@ -22,7 +21,7 @@ theorem card_special_le_four (B : CharZeroBridge) :
     Fintype.card B.specialSing ≤ Fintype.card B.genericSing :=
       Fintype.card_le_of_injective B.persist B.persist_injective
     _ ≤ 2 * B.rho + 2 := B.charZeroBound
-    _ = 4 := by omega
+    _ = 4 := by simp [B.rho_eq_one]
 
 theorem not_seven_singularities (B : CharZeroBridge) :
     ¬ 7 ≤ Fintype.card B.specialSing := by
