@@ -24,5 +24,8 @@ import TameDelPezzo
 #print axioms TameDelPezzo.NearMiss.markedPointIndex_card
 #print axioms TameDelPezzo.NearMiss.markedPoint_injective
 #print axioms TameDelPezzo.NearMiss.eight_distinct_nonzero_affine_solutions
+#print axioms TameDelPezzo.NearMiss.markedCyclicTangentType_tame
+#print axioms TameDelPezzo.NearMiss.markedCyclicTangentType_singular
+#print axioms TameDelPezzo.NearMiss.correction_recovers_resolution_square
 #print axioms TameDelPezzo.NearMiss.visibleSingularPoints_card
 #print axioms TameDelPezzo.NearMiss.eight_point_near_miss_not_rank_one
