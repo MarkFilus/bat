@@ -42,10 +42,10 @@ theorem edge_mu2_1_1 : cstSmoothPrimary 2 1 1 = false := by decide
 theorem edge_trivial_mu7 : cstSmoothPrimary 7 0 0 = true := by decide
 
 /-- A pure-kernel exhaustive comparison on all 1,495 pairs through order 16. -/
-set_option maxRecDepth 100000 in
-set_option maxHeartbeats 0 in
 theorem kernel_agreement_through_16 : implementationsAgreeUpTo 16 = true := by
-  decide
+  set_option maxRecDepth 100000 in
+  set_option maxHeartbeats 0 in
+    decide
 
 /-- Exact size of the pure-kernel comparison. -/
 theorem kernel_representation_count : representationCount 16 = 1495 := by
