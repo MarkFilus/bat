@@ -4,7 +4,7 @@ import TameDelPezzo.NearMiss
 namespace TameDelPezzo.NearMiss
 
 /-- Six sextic points together with the two coordinate points. -/
-noncomputable def visibleSingularPoints : Type :=
+noncomputable abbrev visibleSingularPoints : Type :=
   binarySextic.rootSet (AlgebraicClosure (ZMod 3)) ⊕ Fin 2
 
 /-- The concrete point type has exactly eight elements. -/
