@@ -1,6 +1,8 @@
 import TameDelPezzo
 
+#print axioms TameDelPezzo.card_special_le_two_mul_rho_add_two
 #print axioms TameDelPezzo.card_special_le_four
+#print axioms TameDelPezzo.not_five_singularities
 #print axioms TameDelPezzo.not_eight_singularities
 #print axioms TameDelPezzo.CyclicQuotient.complementary_divisor_involution
 #print axioms TameDelPezzo.CyclicQuotient.coprime_complements_iff_lcm_eq
