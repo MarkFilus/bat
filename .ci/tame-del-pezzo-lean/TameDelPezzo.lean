@@ -6,4 +6,5 @@ import TameDelPezzo.KernelGeneration
 import TameDelPezzo.NearMiss
 import TameDelPezzo.TameArithmetic
 import TameDelPezzo.BinarySextic
+import TameDelPezzo.NearMissEquation
 import TameDelPezzo.NearMissPoints
