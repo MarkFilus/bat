@@ -1,19 +1,37 @@
 import Mathlib
 
+/-!
+# Cyclic quotient calculations
+
+The boolean `cstSmoothPrimary` implements the closed cyclic
+Chevalley--Shephard--Todd test. `cstSmoothEnumerated` is a deliberately separate
+implementation that enumerates coordinate-kernel elements and computes the gcd
+of their exponents.
+
+Only the bounded comparison through order 16 is stored as a kernel proof in
+this module. Larger sweeps are runtime regression checks, not theorem axioms.
+The all-orders proof is in `ComplementaryDivisors.lean`.
+-/
+
 namespace TameDelPezzo.CyclicQuotient
 
+/-- Closed-form smoothness test for the effective cyclic tangent action. -/
 def cstSmoothPrimary (r a b : Nat) : Bool :=
   Nat.gcd (r / Nat.gcd r a) (r / Nat.gcd r b) == 1
 
+/-- Does exponent `k` act trivially on at least one tangent coordinate? -/
 def inCoordinateKernel (r a b k : Nat) : Bool :=
   ((a * k) % r == 0) || ((b * k) % r == 0)
 
+/-- Gcd of the exponents belonging to the two coordinate kernels. -/
 def reflectionGeneratorGCD (r a b : Nat) : Nat :=
   ((List.range r).filter (fun k => inCoordinateKernel r a b k)).foldl Nat.gcd r
 
+/-- Independent enumeration-based smoothness test. -/
 def cstSmoothEnumerated (r a b : Nat) : Bool :=
   reflectionGeneratorGCD r a b == 1
 
+/-- Compare both implementations for every character pair through `bound`. -/
 def implementationsAgreeUpTo (bound : Nat) : Bool :=
   (List.range (bound + 1)).all fun r =>
     if r < 2 then true
@@ -22,10 +40,12 @@ def implementationsAgreeUpTo (bound : Nat) : Bool :=
         (List.range r).all fun b =>
           cstSmoothPrimary r a b == cstSmoothEnumerated r a b
 
+/-- Number of character pairs with cyclic orders from two through `bound`. -/
 def representationCount (bound : Nat) : Nat :=
   ((List.range (bound + 1)).filter (fun r => 2 ≤ r)).foldl
     (fun acc r => acc + r * r) 0
 
+/-- Number classified smooth by the primary formula through `bound`. -/
 def smoothCount (bound : Nat) : Nat :=
   ((List.range (bound + 1)).filter (fun r => 2 ≤ r)).foldl
     (fun acc r =>
@@ -50,21 +70,5 @@ theorem kernel_agreement_through_16 : implementationsAgreeUpTo 16 = true := by
 /-- Exact size of the pure-kernel comparison. -/
 theorem kernel_representation_count : representationCount 16 = 1495 := by
   decide
-
-/-- The larger independent comparison uses Lean's native evaluator. -/
-theorem independent_agreement_through_48 : implementationsAgreeUpTo 48 = true := by
-  native_decide
-
-/-- Exact size of the independent comparison. -/
-theorem independent_representation_count : representationCount 48 = 38023 := by
-  native_decide
-
-/-- Exact size of the larger closed-form sweep. -/
-theorem primary_representation_count : representationCount 256 = 5625215 := by
-  native_decide
-
-/-- Exact smooth count in the larger sweep. -/
-theorem primary_smooth_count : smoothCount 256 = 116075 := by
-  native_decide
 
 end TameDelPezzo.CyclicQuotient
