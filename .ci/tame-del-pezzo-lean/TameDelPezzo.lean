@@ -1,5 +1,6 @@
 import TameDelPezzo.Reduction
 import TameDelPezzo.CyclicQuotient
+import TameDelPezzo.KernelSemantics
 import TameDelPezzo.ComplementaryDivisors
 import TameDelPezzo.NearMiss
 import TameDelPezzo.TameArithmetic
