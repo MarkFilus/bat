@@ -1,0 +1,15 @@
+name = "tame-del-pezzo"
+version = "0.1.0"
+defaultTargets = ["TameDelPezzo", "certificate"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "v4.32.1"
+
+[[lean_lib]]
+name = "TameDelPezzo"
+
+[[lean_exe]]
+name = "certificate"
+root = "Main"
