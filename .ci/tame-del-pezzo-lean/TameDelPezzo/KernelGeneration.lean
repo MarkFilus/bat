@@ -2,13 +2,14 @@ import TameDelPezzo.KernelSemantics
 import TameDelPezzo.ComplementaryDivisors
 
 /-!
-# All-orders proof for a direct coordinate-kernel enumerator
+# All-orders proof for the direct coordinate-kernel enumerator
 
-This file turns the direct finite enumeration of pseudoreflection exponents into
-an exact theorem. The exponent `r` is inserted explicitly as the neutral
-fallback generator; all exponents below `r` that fix either tangent coordinate
-are then included. Their gcd is proved to be the gcd of the two exact coordinate
-kernel generators.
+This file turns direct finite enumeration of pseudoreflection exponents into an
+exact theorem. The exponent `r` is inserted as the neutral fallback generator;
+all exponents below `r` that fix either tangent coordinate are then included.
+Their gcd is proved to be the gcd of the two exact coordinate-kernel generators.
+Finally, the original list/fold implementation is proved equal to this semantic
+finite-set enumerator for every order.
 -/
 
 namespace TameDelPezzo.CyclicQuotient
@@ -69,8 +70,8 @@ theorem second_kernel_generator_mem {r a b : Nat} (hr : 0 < r) :
     · exact Or.inr (dvd_refl _)
 
 /--
-The direct enumerator's gcd is exactly the gcd of the two coordinate-kernel
-generators, for every positive cyclic order.
+The semantic direct enumerator's gcd is exactly the gcd of the two
+coordinate-kernel generators, for every positive cyclic order.
 -/
 theorem reflectionGeneratorGCDFinset_eq_gcd {r a b : Nat} (hr : 0 < r) :
     reflectionGeneratorGCDFinset r a b =
@@ -104,11 +105,41 @@ theorem cstSmoothFinset_eq_true_iff_lcm {r a b : Nat} (hr : 0 < r) :
   rw [cstSmoothFinset_eq_true_iff_coprime hr,
     primary_coprime_iff_stabilizer_lcm hr]
 
-/-- The closed formula and direct finite-set enumerator agree for every positive order. -/
+/-- The closed formula and semantic finite-set enumerator agree for every positive order. -/
 theorem cstSmoothPrimary_eq_cstSmoothFinset {r a b : Nat} (hr : 0 < r) :
     cstSmoothPrimary r a b = cstSmoothFinset r a b := by
   apply Bool.eq_iff_iff.mpr
   rw [cstSmoothPrimary_eq_true_iff_lcm hr,
     cstSmoothFinset_eq_true_iff_lcm hr]
+
+/-- Folding gcd over a list is the gcd of its finite support and the initial accumulator. -/
+theorem foldl_gcd_eq_insert_toFinset_gcd (xs : List Nat) (acc : Nat) :
+    xs.foldl Nat.gcd acc = (insert acc xs.toFinset).gcd id := by
+  induction xs generalizing acc with
+  | nil => simp
+  | cons x xs ih =>
+      simp only [List.foldl, List.toFinset_cons]
+      rw [ih]
+      simp [Nat.gcd_assoc]
+
+/-- The original list/fold implementation equals the semantic finite-set implementation. -/
+theorem reflectionGeneratorGCD_eq_finset (r a b : Nat) :
+    reflectionGeneratorGCD r a b = reflectionGeneratorGCDFinset r a b := by
+  unfold reflectionGeneratorGCD reflectionGeneratorGCDFinset
+  rw [foldl_gcd_eq_insert_toFinset_gcd]
+  congr 1
+  ext k
+  simp [coordinateKernelExponents]
+
+/-- The original boolean enumerator equals the semantic finite-set enumerator at every order. -/
+theorem cstSmoothEnumerated_eq_cstSmoothFinset (r a b : Nat) :
+    cstSmoothEnumerated r a b = cstSmoothFinset r a b := by
+  simp [cstSmoothEnumerated, cstSmoothFinset, reflectionGeneratorGCD_eq_finset]
+
+/-- The two original implementations agree for every positive cyclic order. -/
+theorem cstSmoothPrimary_eq_cstSmoothEnumerated {r a b : Nat} (hr : 0 < r) :
+    cstSmoothPrimary r a b = cstSmoothEnumerated r a b := by
+  rw [cstSmoothEnumerated_eq_cstSmoothFinset]
+  exact cstSmoothPrimary_eq_cstSmoothFinset hr
 
 end TameDelPezzo.CyclicQuotient
