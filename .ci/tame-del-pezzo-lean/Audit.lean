@@ -19,5 +19,10 @@ import TameDelPezzo
 #print axioms TameDelPezzo.NearMiss.nearMissEquation_pderiv_x0
 #print axioms TameDelPezzo.NearMiss.nearMissEquation_pderiv_x1
 #print axioms TameDelPezzo.NearMiss.nearMissEquation_jacobian_zero_only_at_origin
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_punctured_cone_regular
+#print axioms TameDelPezzo.NearMiss.chartPoint_on_nearMissEquation
+#print axioms TameDelPezzo.NearMiss.markedPointIndex_card
+#print axioms TameDelPezzo.NearMiss.markedPoint_injective
+#print axioms TameDelPezzo.NearMiss.eight_distinct_nonzero_affine_solutions
 #print axioms TameDelPezzo.NearMiss.visibleSingularPoints_card
 #print axioms TameDelPezzo.NearMiss.eight_point_near_miss_not_rank_one
