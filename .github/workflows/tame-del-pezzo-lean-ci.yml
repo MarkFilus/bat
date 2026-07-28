@@ -55,6 +55,10 @@ jobs:
             lake build TameDelPezzo
             lake env lean Audit.lean
           } 2>&1 | tee lean-verification.log
+          if grep -E "sorryAx|Lean\.ofReduceBool|Lean\.trustCompiler" lean-verification.log; then
+            echo "forbidden axiom found in the audited declarations" >&2
+            exit 1
+          fi
 
       - name: independent exact regression computation
         if: steps.lean-build.outcome == 'success'
@@ -63,11 +67,29 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/regression.py | tee regression.log
+
+      - name: create deterministic source archive and checksums
+        if: steps.lean-build.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=.ci/tame-del-pezzo-lean
+          archive="$root/tame-del-pezzo-lean-source.tar.gz"
+          git ls-files -z "$root" \
+            | LC_ALL=C sort -z \
+            | tar --null --files-from=- \
+                --sort=name \
+                --mtime='UTC 2026-07-28 00:00:00' \
+                --owner=0 --group=0 --numeric-owner \
+                --transform='s#^\.ci/tame-del-pezzo-lean#tame-del-pezzo-lean#' \
+                -czf "$archive"
+          cd "$root"
           sha256sum \
             lean-toolchain \
             lakefile.lean \
             lake-manifest.json \
             regression-certificate.json \
+            tame-del-pezzo-lean-source.tar.gz \
             > artifact-checksums.sha256
           cat artifact-checksums.sha256
 
@@ -82,6 +104,7 @@ jobs:
             .ci/tame-del-pezzo-lean/regression-certificate.json
             .ci/tame-del-pezzo-lean/artifact-checksums.sha256
             .ci/tame-del-pezzo-lean/lake-manifest.json
+            .ci/tame-del-pezzo-lean/tame-del-pezzo-lean-source.tar.gz
           if-no-files-found: warn
 
       - name: check environment with leanchecker
