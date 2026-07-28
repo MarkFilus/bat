@@ -4,14 +4,18 @@ namespace TameDelPezzo.NearMiss
 
 open Polynomial
 
-def binarySextic : (ZMod 3)[X] := X ^ 6 + X + 1
+noncomputable def binarySextic : (ZMod 3)[X] := X ^ 6 + X + 1
 
 theorem binarySextic_derivative : derivative binarySextic = 1 := by
-  have h6 : (6 : ZMod 3) = 0 := by native_decide
-  simp [binarySextic, derivative_X_pow, h6]
+  simp [binarySextic]
+  norm_num
 
 theorem binarySextic_natDegree : binarySextic.natDegree = 6 := by
-  native_decide
+  change ((X ^ 6 + X + C 1 : (ZMod 3)[X])).natDegree = 6
+  rw [natDegree_add_C]
+  rw [natDegree_add_eq_left_of_natDegree_lt]
+  · simp
+  · norm_num
 
 theorem binarySextic_separable : binarySextic.Separable := by
   rw [Polynomial.separable_def, binarySextic_derivative]
