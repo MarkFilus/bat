@@ -7,8 +7,10 @@ open Polynomial
 noncomputable def binarySextic : (ZMod 3)[X] := X ^ 6 + X + 1
 
 theorem binarySextic_derivative : derivative binarySextic = 1 := by
-  simp [binarySextic]
-  norm_num
+  rw [binarySextic, derivative_add, derivative_add, derivative_X_pow,
+    derivative_X, derivative_one]
+  have h6 : (6 : ZMod 3) = 0 := by decide
+  simp [h6]
 
 theorem binarySextic_natDegree : binarySextic.natDegree = 6 := by
   change ((X ^ 6 + X + C 1 : (ZMod 3)[X])).natDegree = 6
