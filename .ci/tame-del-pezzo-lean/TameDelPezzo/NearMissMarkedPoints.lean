@@ -22,14 +22,14 @@ open MvPolynomial Polynomial
 abbrev GeometricField := AlgebraicClosure (ZMod 3)
 
 /-- The chart point `(t,1,0,0)`. -/
-def chartPoint (t : GeometricField) : Coordinate → GeometricField
+noncomputable def chartPoint (t : GeometricField) : Coordinate → GeometricField
   | .x0 => t
   | .x1 => 1
   | .y => 0
   | .z => 0
 
 /-- The two coordinate points, indexed by a Boolean. -/
-def coordinatePoint : Bool → Coordinate → GeometricField
+noncomputable def coordinatePoint : Bool → Coordinate → GeometricField
   | false, .y => 1
   | false, _ => 0
   | true, .z => 1
@@ -58,7 +58,7 @@ theorem chartPoint_injective : Function.Injective chartPoint := by
 theorem chartPoint_ne_zero (t : GeometricField) : chartPoint t ≠ 0 := by
   intro h
   have hx1 := congr_fun h Coordinate.x1
-  simpa [chartPoint] using hx1
+  simp [chartPoint] at hx1
 
 /-- Both coordinate points satisfy the weighted equation. -/
 theorem coordinatePoint_on_nearMissEquation (b : Bool) :
@@ -81,16 +81,16 @@ theorem coordinatePoint_ne_zero (b : Bool) : coordinatePoint b ≠ 0 := by
   cases b
   · intro h
     have hy := congr_fun h Coordinate.y
-    simpa [coordinatePoint] using hy
+    simp [coordinatePoint] at hy
   · intro h
     have hz := congr_fun h Coordinate.z
-    simpa [coordinatePoint] using hz
+    simp [coordinatePoint] at hz
 
 /-- Index type for the six chart points and two coordinate points. -/
 abbrev MarkedPointIndex := binarySextic.rootSet GeometricField ⊕ Bool
 
 /-- The eight explicit affine representatives. -/
-def markedPoint : MarkedPointIndex → Coordinate → GeometricField
+noncomputable def markedPoint : MarkedPointIndex → Coordinate → GeometricField
   | Sum.inl t => chartPoint t
   | Sum.inr b => coordinatePoint b
 
@@ -120,20 +120,19 @@ theorem markedPoint_injective : Function.Injective markedPoint := by
   | inl t =>
       cases q with
       | inl u =>
-          apply Sum.inl_injective
-          apply Subtype.ext
-          exact chartPoint_injective h
+          have htu : t = u := Subtype.ext (chartPoint_injective h)
+          exact congrArg Sum.inl htu
       | inr b =>
           have hx1 := congr_fun h Coordinate.x1
-          simp [markedPoint, chartPoint, coordinatePoint] at hx1
+          cases b <;> simp [markedPoint, chartPoint, coordinatePoint] at hx1
   | inr b =>
       cases q with
       | inl t =>
           have hx1 := congr_fun h Coordinate.x1
-          simp [markedPoint, chartPoint, coordinatePoint] at hx1
+          cases b <;> simp [markedPoint, chartPoint, coordinatePoint] at hx1
       | inr c =>
-          apply Sum.inr_injective
-          exact coordinatePoint_injective h
+          have hbc : b = c := coordinatePoint_injective h
+          exact congrArg Sum.inr hbc
 
 /--
 A compact certificate: eight indices, an injective realization, equation
