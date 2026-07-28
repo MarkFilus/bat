@@ -50,7 +50,8 @@ theorem first_kernel_generator_mem {r a b : Nat} (hr : 0 < r) :
   · exact Or.inl h
   · right
     constructor
-    · have hle := Nat.le_of_dvd hr first_kernel_generator_dvd_order
+    · have hle := Nat.le_of_dvd hr
+        (first_kernel_generator_dvd_order (r := r) (a := a))
       omega
     · exact Or.inl (dvd_refl _)
 
@@ -62,7 +63,8 @@ theorem second_kernel_generator_mem {r a b : Nat} (hr : 0 < r) :
   · exact Or.inl h
   · right
     constructor
-    · have hle := Nat.le_of_dvd hr second_kernel_generator_dvd_order
+    · have hle := Nat.le_of_dvd hr
+        (second_kernel_generator_dvd_order (r := r) (b := b))
       omega
     · exact Or.inr (dvd_refl _)
 
@@ -82,7 +84,7 @@ theorem reflectionGeneratorGCDFinset_eq_gcd {r a b : Nat} (hr : 0 < r) :
     rw [mem_coordinateKernelExponents hr] at hk
     rcases hk with rfl | ⟨_, hk⟩
     · exact Nat.dvd_trans (Nat.gcd_dvd_left _ _)
-        first_kernel_generator_dvd_order
+        (first_kernel_generator_dvd_order (r := r) (a := a))
     · rcases hk with hka | hkb
       · exact Nat.dvd_trans (Nat.gcd_dvd_left _ _) hka
       · exact Nat.dvd_trans (Nat.gcd_dvd_right _ _) hkb
