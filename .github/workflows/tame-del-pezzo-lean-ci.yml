@@ -1,0 +1,60 @@
+name: tame del pezzo lean public ci
+
+on:
+  pull_request:
+    paths:
+      - ".ci/tame-del-pezzo-lean.tar.gz.b64"
+      - ".github/workflows/tame-del-pezzo-lean-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: unpack certificate source
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d .ci/tame-del-pezzo-lean.tar.gz.b64 | tar -xz
+
+      - name: reject proof placeholders and project axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=tame-del-pezzo-lean
+          if grep -RInE ":=[[:space:]]*(by[[:space:]]+)?(sorry|admit)|by[[:space:]]+(sorry|admit)|^[[:space:]]*axiom[[:space:]]" "$root" --include='*.lean'; then
+            exit 1
+          fi
+
+      - name: build and independently kernel-check
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: tame-del-pezzo-lean
+          auto-config: false
+          build: true
+          test: false
+          lint: false
+          use-mathlib-cache: true
+          leanchecker: true
+          nanoda: true
+          nanoda-allow-sorry: false
+
+      - name: run certificate and axiom audit
+        working-directory: tame-del-pezzo-lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake exe certificate | tee lean-verification.log
+          lake env lean Audit.lean 2>&1 | tee -a lean-verification.log
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tame-del-pezzo-lean-verification
+          path: tame-del-pezzo-lean/lean-verification.log
+          if-no-files-found: error
