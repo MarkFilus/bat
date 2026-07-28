@@ -60,8 +60,8 @@ theorem markedCyclicTangentType_order_positive (p : MarkedPointIndex) :
 theorem markedCyclicTangentType_tame (p : MarkedPointIndex) :
     Nat.Coprime (markedCyclicTangentType p).order 3 := by
   cases p with
-  | inl t => decide
-  | inr b => cases b <;> decide
+  | inl t => norm_num [markedCyclicTangentType, Nat.Coprime]
+  | inr b => cases b <;> norm_num [markedCyclicTangentType, Nat.Coprime]
 
 /-- Every listed tangent representation gives a singular cyclic quotient. -/
 theorem markedCyclicTangentType_singular (p : MarkedPointIndex) :
@@ -70,7 +70,7 @@ theorem markedCyclicTangentType_singular (p : MarkedPointIndex) :
       (markedCyclicTangentType p).firstCharacter
       (markedCyclicTangentType p).secondCharacter = false := by
   cases p with
-  | inl t => decide
+  | inl t => decide +revert
   | inr b => cases b <;> decide
 
 /-- The six chart indices have cardinality six. -/
