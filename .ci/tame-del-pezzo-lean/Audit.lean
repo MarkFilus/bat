@@ -15,5 +15,9 @@ import TameDelPezzo
 #print axioms TameDelPezzo.CyclicQuotient.cstSmoothPrimary_eq_cstSmoothFinset
 #print axioms TameDelPezzo.NearMiss.binarySextic_derivative
 #print axioms TameDelPezzo.NearMiss.binarySextic_six_distinct_geometric_roots
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_isWeightedHomogeneous
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_pderiv_x0
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_pderiv_x1
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_jacobian_zero_only_at_origin
 #print axioms TameDelPezzo.NearMiss.visibleSingularPoints_card
 #print axioms TameDelPezzo.NearMiss.eight_point_near_miss_not_rank_one
