@@ -1,0 +1,28 @@
+import TameDelPezzo
+
+#print axioms TameDelPezzo.card_special_le_two_mul_rho_add_two
+#print axioms TameDelPezzo.card_special_le_four
+#print axioms TameDelPezzo.not_five_singularities
+#print axioms TameDelPezzo.not_eight_singularities
+#print axioms TameDelPezzo.CyclicQuotient.character_vanishes_iff_generator_dvd
+#print axioms TameDelPezzo.CyclicQuotient.inCoordinateKernel_eq_true_iff
+#print axioms TameDelPezzo.CyclicQuotient.complementary_divisor_involution
+#print axioms TameDelPezzo.CyclicQuotient.coprime_complements_iff_lcm_eq
+#print axioms TameDelPezzo.CyclicQuotient.primary_coprime_iff_stabilizer_lcm
+#print axioms TameDelPezzo.CyclicQuotient.cstSmoothPrimary_eq_true_iff_lcm
+#print axioms TameDelPezzo.CyclicQuotient.kernel_agreement_through_16
+#print axioms TameDelPezzo.CyclicQuotient.reflectionGeneratorGCDFinset_eq_gcd
+#print axioms TameDelPezzo.CyclicQuotient.cstSmoothPrimary_eq_cstSmoothFinset
+#print axioms TameDelPezzo.NearMiss.binarySextic_derivative
+#print axioms TameDelPezzo.NearMiss.binarySextic_six_distinct_geometric_roots
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_isWeightedHomogeneous
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_pderiv_x0
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_pderiv_x1
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_jacobian_zero_only_at_origin
+#print axioms TameDelPezzo.NearMiss.nearMissEquation_punctured_cone_regular
+#print axioms TameDelPezzo.NearMiss.chartPoint_on_nearMissEquation
+#print axioms TameDelPezzo.NearMiss.markedPointIndex_card
+#print axioms TameDelPezzo.NearMiss.markedPoint_injective
+#print axioms TameDelPezzo.NearMiss.eight_distinct_nonzero_affine_solutions
+#print axioms TameDelPezzo.NearMiss.visibleSingularPoints_card
+#print axioms TameDelPezzo.NearMiss.eight_point_near_miss_not_rank_one
