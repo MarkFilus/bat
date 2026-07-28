@@ -59,7 +59,7 @@ theorem nearMissEquation_isWeightedHomogeneous
       (isWeightedHomogeneous_X (R := K) coordinateWeight Coordinate.z)
   have hyz : IsWeightedHomogeneous coordinateWeight
       (X Coordinate.y * X Coordinate.z : MvPolynomial Coordinate K) 12 := by
-    convert hy.mul hz using 1 <;> norm_num
+    convert hy.mul hz using 1
   have hx0six : IsWeightedHomogeneous coordinateWeight
       (X Coordinate.x0 ^ 6 : MvPolynomial Coordinate K) 12 := by
     convert hx0.pow 6 using 1 <;> norm_num
@@ -78,20 +78,19 @@ theorem nearMissEquation_pderiv_x0
     pderiv Coordinate.x0 (nearMissEquation K) = X Coordinate.x1 ^ 5 := by
   have h6 : (6 : MvPolynomial Coordinate K) = 0 :=
     (CharP.cast_eq_zero_iff _ 3 6).2 (by norm_num)
-  simp [nearMissEquation, MvPolynomial.pderiv_mul,
-    MvPolynomial.pderiv_pow, h6]
+  simp [nearMissEquation, h6]
 
-/-- In characteristic three, the `y` derivative is `z`. -/
+/-- The `y` derivative is `z`. -/
 theorem nearMissEquation_pderiv_y
     (K : Type*) [CommSemiring K] :
     pderiv Coordinate.y (nearMissEquation K) = X Coordinate.z := by
-  simp [nearMissEquation, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow]
+  simp [nearMissEquation]
 
-/-- In characteristic three, the `z` derivative is `y`. -/
+/-- The `z` derivative is `y`. -/
 theorem nearMissEquation_pderiv_z
     (K : Type*) [CommSemiring K] :
     pderiv Coordinate.z (nearMissEquation K) = X Coordinate.y := by
-  simp [nearMissEquation, MvPolynomial.pderiv_mul, MvPolynomial.pderiv_pow]
+  simp [nearMissEquation]
 
 /-- In characteristic three, the remaining derivative is `2*x0*x1^4`. -/
 theorem nearMissEquation_pderiv_x1
@@ -103,10 +102,9 @@ theorem nearMissEquation_pderiv_x1
   have h5 : (5 : MvPolynomial Coordinate K) = 2 := by
     calc
       (5 : MvPolynomial Coordinate K) = (5 % 3 : Nat) :=
-        CharP.cast_eq_mod 3 5
+        CharP.cast_eq_mod (R := MvPolynomial Coordinate K) 3 5
       _ = 2 := by norm_num
-  simp [nearMissEquation, MvPolynomial.pderiv_mul,
-    MvPolynomial.pderiv_pow, h6, h5]
+  simp [nearMissEquation, h6, h5]
   ring
 
 /--
@@ -126,12 +124,12 @@ theorem nearMissEquation_jacobian_zero_only_at_origin
   rw [nearMissEquation_pderiv_y] at hDy
   rw [nearMissEquation_pderiv_z] at hDz
   have hx1pow : point Coordinate.x1 ^ 5 = 0 := by simpa using hDx0
-  have hx1 : point Coordinate.x1 = 0 := pow_eq_zero hx1pow
+  have hx1 : point Coordinate.x1 = 0 := eq_zero_of_pow_eq_zero hx1pow
   have hz : point Coordinate.z = 0 := by simpa using hDy
   have hy : point Coordinate.y = 0 := by simpa using hDz
   have hx0pow : point Coordinate.x0 ^ 6 = 0 := by
     simpa [nearMissEquation, hx1, hy, hz] using hEquation
-  have hx0 : point Coordinate.x0 = 0 := pow_eq_zero hx0pow
+  have hx0 : point Coordinate.x0 = 0 := eq_zero_of_pow_eq_zero hx0pow
   intro coordinate
   cases coordinate <;> assumption
 
