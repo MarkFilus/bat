@@ -22,17 +22,23 @@ theorem character_vanishes_iff_generator_dvd {r a k : Nat} (hr : 0 < r) :
   rw [← Nat.dvd_iff_mod_eq_zero]
   constructor
   · intro hdiv
+    have hdiv' := hdiv
+    rw [← Nat.div_mul_cancel hdr, ← Nat.div_mul_cancel hda] at hdiv'
     have hscaled : (r / d) * d ∣ ((a / d) * k) * d := by
-      simpa [d, Nat.div_mul_cancel hdr, Nat.div_mul_cancel hda,
-        Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm] using hdiv
+      simpa [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm] using hdiv'
     have hreduced : r / d ∣ (a / d) * k :=
       (Nat.mul_dvd_mul_iff_right hdpos).mp hscaled
-    exact hcop.dvd_of_dvd_mul_right hreduced
+    exact hcop.dvd_of_dvd_mul_left hreduced
   · intro hk
+    change r / d ∣ k at hk
     rcases hk with ⟨t, rfl⟩
-    rw [← Nat.div_mul_cancel hdr, ← Nat.div_mul_cancel hda]
     refine ⟨(a / d) * t, ?_⟩
-    ring
+    calc
+      a * (r / d * t) = (a / d * d) * (r / d * t) := by
+        rw [Nat.div_mul_cancel hda]
+      _ = (r / d * d) * (a / d * t) := by ring
+      _ = r * (a / d * t) := by
+        rw [Nat.div_mul_cancel hdr]
 
 /-- Boolean form used by the direct coordinate-kernel implementation. -/
 theorem inCoordinateKernel_eq_true_iff {r a b k : Nat} (hr : 0 < r) :
