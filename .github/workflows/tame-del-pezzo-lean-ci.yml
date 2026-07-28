@@ -26,28 +26,64 @@ jobs:
             exit 1
           fi
 
-      - name: build and independently kernel-check
+      - name: install pinned Lean toolchain
         uses: leanprover/lean-action@v1
         with:
           lake-package-directory: .ci/tame-del-pezzo-lean
           auto-config: false
-          build: true
+          build: false
           test: false
           lint: false
-          use-mathlib-cache: true
+          use-mathlib-cache: false
+          leanchecker: false
+          nanoda: false
+
+      - name: update, cache, and build with captured log
+        id: lean-build
+        working-directory: .ci/tame-del-pezzo-lean
+        shell: bash
+        run: |
+          set -o pipefail
+          {
+            lake update
+            lake exe cache get
+            lake build
+          } 2>&1 | tee lean-build.log
+
+      - name: upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tame-del-pezzo-lean-build-log
+          path: .ci/tame-del-pezzo-lean/lean-build.log
+          if-no-files-found: warn
+
+      - name: independent environment checkers
+        if: steps.lean-build.outcome == 'success'
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: .ci/tame-del-pezzo-lean
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: false
           leanchecker: true
           nanoda: true
           nanoda-allow-sorry: false
 
       - name: run finite certificate
+        if: steps.lean-build.outcome == 'success'
         working-directory: .ci/tame-del-pezzo-lean
         shell: bash
         run: |
           set -euo pipefail
           lake exe certificate | tee lean-verification.log
 
-      - uses: actions/upload-artifact@v4
+      - name: upload verification log
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: tame-del-pezzo-lean-verification
           path: .ci/tame-del-pezzo-lean/lean-verification.log
-          if-no-files-found: error
+          if-no-files-found: warn
