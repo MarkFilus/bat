@@ -17,17 +17,21 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
-      - name: reject proof placeholders and project axioms
+      - name: reject enlarged trust base
         shell: bash
         run: |
           set -euo pipefail
           root=.ci/tame-del-pezzo-lean
           if grep -RInE ":=[[:space:]]*(by[[:space:]]+)?(sorry|admit)|by[[:space:]]+(sorry|admit)|^[[:space:]]*axiom[[:space:]]" "$root" --include='*.lean'; then
             echo "forbidden proof placeholder or project axiom" >&2
+            exit 1
+          fi
+          if grep -RIn "native_decide" "$root" --include='*.lean'; then
+            echo "native_decide is excluded from the trusted Lean library" >&2
             exit 1
           fi
 
@@ -39,7 +43,7 @@ jobs:
             | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: update, restore mathlib cache, and build lean library
+      - name: update, restore mathlib cache, build, and print axiom ledger
         id: lean-build
         working-directory: .ci/tame-del-pezzo-lean
         shell: bash
@@ -52,15 +56,35 @@ jobs:
             lake env lean Audit.lean
           } 2>&1 | tee lean-verification.log
 
-      - name: upload primary verification log
+      - name: independent exact regression computation
+        if: steps.lean-build.outcome == 'success'
+        working-directory: .ci/tame-del-pezzo-lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/regression.py | tee regression.log
+          sha256sum \
+            lean-toolchain \
+            lakefile.lean \
+            lake-manifest.json \
+            regression-certificate.json \
+            > artifact-checksums.sha256
+          cat artifact-checksums.sha256
+
+      - name: upload primary evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tame-del-pezzo-lean-verification
-          path: .ci/tame-del-pezzo-lean/lean-verification.log
-          if-no-files-found: error
+          name: tame-del-pezzo-lean-evidence
+          path: |
+            .ci/tame-del-pezzo-lean/lean-verification.log
+            .ci/tame-del-pezzo-lean/regression.log
+            .ci/tame-del-pezzo-lean/regression-certificate.json
+            .ci/tame-del-pezzo-lean/artifact-checksums.sha256
+            .ci/tame-del-pezzo-lean/lake-manifest.json
+          if-no-files-found: warn
 
-      - name: independent environment checkers
+      - name: check environment with leanchecker
         if: steps.lean-build.outcome == 'success'
         uses: leanprover/lean-action@v1
         with:
@@ -71,5 +95,18 @@ jobs:
           lint: false
           use-mathlib-cache: false
           leanchecker: true
+          nanoda: false
+
+      - name: check environment with independent rust checker nanoda
+        if: steps.lean-build.outcome == 'success'
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: .ci/tame-del-pezzo-lean
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: false
+          leanchecker: false
           nanoda: true
           nanoda-allow-sorry: false
