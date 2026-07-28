@@ -2,6 +2,10 @@ import TameDelPezzo
 
 #print axioms TameDelPezzo.card_special_le_four
 #print axioms TameDelPezzo.not_eight_singularities
+#print axioms TameDelPezzo.CyclicQuotient.complementary_divisor_involution
+#print axioms TameDelPezzo.CyclicQuotient.coprime_complements_iff_lcm_eq
+#print axioms TameDelPezzo.CyclicQuotient.primary_coprime_iff_stabilizer_lcm
+#print axioms TameDelPezzo.CyclicQuotient.cstSmoothPrimary_eq_true_iff_lcm
 #print axioms TameDelPezzo.CyclicQuotient.kernel_agreement_through_16
 #print axioms TameDelPezzo.CyclicQuotient.independent_agreement_through_48
 #print axioms TameDelPezzo.NearMiss.binarySextic_derivative
